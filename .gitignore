@@ -1,0 +1,5 @@
+venv/
+rag_database/
+chroma_db/
+__pycache__/
+*.pyc
