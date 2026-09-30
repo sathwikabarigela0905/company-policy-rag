@@ -2,7 +2,7 @@ import streamlit as st
 import chromadb
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
-from ollama import chat, ResponseError
+from google import genai
 
 st.set_page_config(
     page_title="Company Policy RAG",
@@ -221,32 +221,22 @@ ANSWER:
 
                         try:
 
-                            response = chat(
-                                model="llama3.2",
-                                messages=[
-                                    {
-                                        "role": "system",
-                                        "content": "You are a precise company policy assistant."
-                                    },
-                                    {
-                                        "role": "user",
-                                        "content": prompt
-                                    }
-                                ]
+                            client_ai = genai.Client(
+                                api_key=st.secrets["GEMINI_API_KEY"]
                             )
 
-                            try:
-                                answer = response.message.content
-                            except AttributeError:
-                                answer = response["message"]["content"]
+                            response = client_ai.models.generate_content(
+                                model="gemini-2.5-flash",
+                                contents=prompt
+                            )
+
+                            answer = response.text
 
                             st.success("Answer")
                             st.write(answer)
 
-                        except ResponseError as e:
-                            st.error(f"Ollama error: {e}")
-
                         except Exception as e:
+
                             st.error(
                                 f"Error generating answer: {e}"
                             )

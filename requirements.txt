@@ -1,4 +1,4 @@
 streamlit
 sentence-transformers
 chromadb
-ollama
+google-genai
